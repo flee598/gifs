@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>gifs in R</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="" />
+    <meta name="date" content="2020-05-28" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# gifs in R
+## made from data or programmatically…. no cats
+### 2020-05-28
+
+---
+
+
+# Useful stuff
+
+- These slides: 
+- Covid-19 data:
+
+- packages used:
+  - tidyverse - data manipulation and plotting 
+  - magick    - sowing figures into gifs 
+
+I am using Windows 10 with R v3.6-2.  
+
+---
+class: center, middle
+
+# Some examples
+
+---
+class: inverse, center
+
+Gambo distribution through time
+&lt;img src="https://raw.githubusercontent.com/flee598/tut_stuff/master/gifs/Gambo.gif" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+class: inverse, center
+
+NZ covid cases by DHB region
+&lt;img src="https://raw.githubusercontent.com/flee598/tut_stuff/master/gifs/covidNZ.gif" width="50%" style="display: block; margin: auto;" /&gt;
+
+
+---
+class: inverse, center
+
+Some generative art....
+&lt;img src="https://s7.gifyu.com/images/t192af2e314dc612f1.gif" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+class: inverse, center
+
+&lt;img src="https://s7.gifyu.com/images/t2.gif" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+# The process
+
+- 1: get data
+- 2: fill in missing data gaps so there is a continuous record 
+- 3: create 1 figure per time-step 
+- 4: sow together into a gif 
+
+Normally most time is spent on 2, 3, 1, 4 respectively. 
+ 
+---
+# Walk through a gapminder example 
+
+Temporal data is ideal for gifs.
+
+[Gapminder](https://www.gapminder.org) is a global database of temporal
+socio-economic data, conveniently there is an R package for it. 
+
+
+Install required packages
+
+```r
+install.packages(c("gapminder", "tidyverse", "magick"))
+```
+
+Load packages
+
+```r
+library(gapminder)
+library(tidyverse)
+library(magick)
+```
+
+Now have access to the gapminder data.
+---
+
+Have a look:
+
+```r
+head(gapminder)
+```
+
+```
+## # A tibble: 6 x 6
+##   country     continent  year lifeExp      pop gdpPercap
+##   &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
+## 1 Afghanistan Asia       1952    28.8  8425333      779.
+## 2 Afghanistan Asia       1957    30.3  9240934      821.
+## 3 Afghanistan Asia       1962    32.0 10267083      853.
+## 4 Afghanistan Asia       1967    34.0 11537966      836.
+## 5 Afghanistan Asia       1972    36.1 13079460      740.
+## 6 Afghanistan Asia       1977    38.4 14880372      786.
+```
+
+```r
+dim(gapminder)
+```
+
+```
+## [1] 1704    6
+```
+
+~1700 observations, too much for a quick gif 
+
+---
+
+Summarise mean life expectancy through time, by continent 
+
+```r
+dat1 &lt;- gapminder %&gt;% 
+  group_by(continent, year) %&gt;%
+  summarise(Mnlife = mean(lifeExp)) 
+
+head(dat1)
+```
+
+```
+## # A tibble: 6 x 3
+## # Groups:   continent [1]
+##   continent  year Mnlife
+##   &lt;fct&gt;     &lt;int&gt;  &lt;dbl&gt;
+## 1 Africa     1952   39.1
+## 2 Africa     1957   41.3
+## 3 Africa     1962   43.3
+## 4 Africa     1967   45.3
+## 5 Africa     1972   47.5
+## 6 Africa     1977   49.6
+```
+
+```r
+dim(dat1)
+```
+
+```
+## [1] 60  3
+```
+Better!
+
+---
+
+
+```r
+dat1 %&gt;%
+  ggplot(aes(year, Mnlife, colour = continent)) +
+  scale_colour_brewer(palette = "Set2") +
+  geom_line(size = 1) +
+  geom_point(size = 3) +
+  theme_bw() +
+  theme(text = element_text(size = 16))
+```
+
+&lt;img src="slides_files/figure-html/unnamed-chunk-9-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+We can make a gif where each time-step new data points are added. 
+
+---
+
+Typically we want to loop over each of the levels of the explanitory variable (year)
+creating a plot for each, which we then sow together. 
+
+First get the years that data exist for. 
+
+
+```r
+yrs &lt;- unique(dat1$year)
+yrs
+```
+
+```
+##  [1] 1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 2002 2007
+```
+
+plot the first year only:
+
+
+```r
+dat1 %&gt;%
+  filter(year == yrs[1]) %&gt;%
+  ggplot(aes(year, Mnlife, colour = continent)) +
+  scale_colour_brewer(palette = "Set2") +
+  geom_line(size = 1) +
+  geom_point(size = 3) +
+  theme_bw() +
+  ylab(" Mean life expectancy") +
+  theme(text = element_text(size = 16))
+```
+
+---
+
+
+```
+## geom_path: Each group consists of only one observation. Do you need to adjust
+## the group aesthetic?
+```
+
+&lt;img src="slides_files/figure-html/unnamed-chunk-12-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+x-axis limits are no good.
+
+Can ignore the warning
+---
+
+.pull-left[
+Rescale the x and y axes so they match ranges in whole dataset 
+
+
+```r
+dat1 %&gt;%
+  filter(year == yrs[1]) %&gt;%
+  ggplot(aes(year, Mnlife, colour = continent)) +
+  scale_x_continuous(limits = c(min(yrs), max(yrs))) +
+  scale_y_continuous(limits = c(min(dat1$Mnlife), max(dat1$Mnlife))) +
+  scale_colour_brewer(palette = "Set2") +
+  geom_line(size = 1) +
+  geom_point(size = 3) +
+  theme_bw() +
+  ylab("Mean life expectancy (years)") +
+  xlab("Year") +
+  theme(text = element_text(size = 16)) +
+  theme(legend.position = "bottom")
+```
+]
+.pull-right[
+&lt;img src="slides_files/figure-html/plot-label-out-1.png" width="504" /&gt;
+Looking better
+]
+
+
+---
+.pull-left[
+Plot the second time-point 
+
+
+```r
+dat1 %&gt;%
+  filter(year == yrs[2]) %&gt;%
+  ggplot(aes(year, Mnlife, colour = continent)) +
+  scale_x_continuous(limits = c(min(yrs), max(yrs))) +
+  scale_y_continuous(limits = c(min(dat1$Mnlife), max(dat1$Mnlife))) +
+  scale_colour_brewer(palette = "Set2") +
+  geom_line(size = 1) +
+  geom_point(size = 3) +
+  theme_bw() +
+  ylab("Mean life expectancy (years)") +
+  xlab("Year") +
+  theme(text = element_text(size = 16)) +
+  theme(legend.position = "bottom")
+```
+]
+
+.pull-right[
+&lt;img src="slides_files/figure-html/plot-label-out2-1.png" width="504" /&gt;
+Trash! only the second timepoint. 
+]
+
+---
+.pull-left[
+Plot the second and first time points together
+
+
+```r
+dat1 %&gt;%
+  filter(year &lt;= yrs[2]) %&gt;% # == -&gt; &lt;=
+  ggplot(aes(year, Mnlife, colour = continent)) +
+  scale_x_continuous(limits = c(min(yrs), max(yrs))) +
+  scale_y_continuous(limits = c(min(dat1$Mnlife), max(dat1$Mnlife))) +
+  scale_colour_brewer(palette = "Set2") +
+  geom_line(size = 1) +
+  geom_point(size = 3) +
+  theme_bw() +
+  ylab("Mean life expectancy (years)") +
+  xlab("Year") +
+  theme(text = element_text(size = 16)) +
+  theme(legend.position = "bottom")
+```
+]
+
+.pull-right[
+&lt;img src="slides_files/figure-html/plot-label-out3-1.png" width="504" /&gt;
+Trash! only the second timepoint. 
+]
+
+---
+We want to step through all `yrs`, creating a plot each time-step, too lazy to do it 
+manually, we can use a for loop or lapply. 
+
+First need a folder to save the plots:
+
+```r
+if (!dir.exists("fig_out")) {dir.create("fig_out")}
+```
+ 
+I'll use a for-loop, with seq_along(yrs), which returns the index of each element in
+yrs e.g.
+
+```r
+for (i in seq_along(yrs)) {
+  print(i)
+}
+```
+
+```
+## [1] 1
+## [1] 2
+## [1] 3
+## [1] 4
+## [1] 5
+## [1] 6
+## [1] 7
+## [1] 8
+## [1] 9
+## [1] 10
+## [1] 11
+## [1] 12
+```
+---
+
+
+```r
+for (i in seq_along(yrs)) {
+  
+  print(i) # print progress
+  
+  # make figure 
+  dat1 %&gt;%
+    filter(year &lt;= yrs[i]) %&gt;%  # yrs[i] = index for each year 
+    ggplot(aes(year, Mnlife, colour = continent)) +
+    scale_x_continuous(limits = c(min(yrs), max(yrs))) +
+    scale_y_continuous(limits = c(min(dat1$Mnlife), max(dat1$Mnlife))) +
+    scale_colour_brewer(palette = "Set2") +
+    geom_line(size = 1) +
+    geom_point(size = 3) +
+    theme_bw() +
+    ylab("Mean life expectancy (years)") +
+    xlab("Year") +
+    theme(text = element_text(size = 16)) +
+    theme(legend.position = "bottom")
+  
+  # save each plot to the fig_out folder
+  # each figure is named plt_i.png, where i = 1:12
+  ggsave(file = paste0("fig_out/plt_",i,".png"), 
+    width = 15, 
+    height = 10, 
+    units = "cm")
+}
+```
+---
+Should now have the fig_out folder caontaining 12 .png figures, 
+just gotta stick them together.
+
+
+```r
+list.files(path = "./fig_out/", pattern = "*.png", full.names = T) %&gt;% # get list of files in folder
+  gtools::mixedsort() %&gt;%    # order files by number
+  map(image_read) %&gt;%        # reads each filepath 
+  image_join() %&gt;%           # joins image
+  image_animate(fps = 4) %&gt;% # animates, set frame speed
+  image_write("GapMinder.gif") # gif name  
+```
+
+It will be slow if you have many (&gt;100) figures. 
+---
+class: inverse, center
+
+&lt;img src="https://raw.githubusercontent.com/flee598/tut_stuff/master/gifs/GapMinder.gif" width="80%" style="display: block; margin: auto;" /&gt;
+---
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
