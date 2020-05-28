@@ -35,7 +35,7 @@ class: inverse, center
 
 Gambo distribution through time
 ```{r out.width = '50%', echo=FALSE, fig.align='center'}
-knitr::include_graphics("https://raw.githubusercontent.com/flee598/gifs/Gambo.gif") 
+knitr::include_graphics("https://raw.githubusercontent.com/flee598/gifs/master/Gambo.gif") 
 ```
 
 ---
@@ -43,7 +43,7 @@ class: inverse, center
 
 NZ covid cases by DHB region
 ```{r out.width = '50%', echo=FALSE, fig.align='center'}
-knitr::include_graphics("https://raw.githubusercontent.com/flee598/gifs/covidNZ.gif") 
+knitr::include_graphics("https://raw.githubusercontent.com/flee598/gifs/master/covidNZ.gif") 
 ```
 
 
@@ -328,4 +328,4 @@ class: inverse, center
 ```{r out.width = '80%', echo=FALSE, fig.align='center'}
 knitr::include_graphics("https://raw.githubusercontent.com/flee598/gifs/master/GapMinder.gif")
 ```
----
+
