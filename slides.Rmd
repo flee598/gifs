@@ -54,6 +54,7 @@ Some generative art....
 ```{r out.width = '50%', echo=FALSE, fig.align='center'}
 knitr::include_graphics("https://s7.gifyu.com/images/t192af2e314dc612f1.gif") 
 ```
+[code source](https://www.r-bloggers.com/turn-a-square-generative-art)
 
 ---
 class: inverse, center
