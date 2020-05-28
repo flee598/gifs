@@ -16,17 +16,17 @@ output:
 
 # Useful stuff
 
-- These slides: 
-- Covid-19 data:
+- These slides: https://flee598.github.io/gifs/slides.html#1
 
 - packages used:
   - tidyverse - data manipulation and plotting 
   - magick    - sowing figures into gifs 
+  - gapminder - some data
 
 I am using Windows 10 with R v3.6-2.  
 
 ---
-class: center, middle
+class: inverse, center, middle
 
 # Some examples
 
@@ -35,7 +35,7 @@ class: inverse, center
 
 Gambo distribution through time
 ```{r out.width = '50%', echo=FALSE, fig.align='center'}
-knitr::include_graphics("https://raw.githubusercontent.com/flee598/tut_stuff/master/gifs/Gambo.gif") 
+knitr::include_graphics("https://raw.githubusercontent.com/flee598/gifs/Gambo.gif") 
 ```
 
 ---
@@ -43,7 +43,7 @@ class: inverse, center
 
 NZ covid cases by DHB region
 ```{r out.width = '50%', echo=FALSE, fig.align='center'}
-knitr::include_graphics("https://raw.githubusercontent.com/flee598/tut_stuff/master/gifs/covidNZ.gif") 
+knitr::include_graphics("https://raw.githubusercontent.com/flee598/gifs/covidNZ.gif") 
 ```
 
 
@@ -58,6 +58,7 @@ knitr::include_graphics("https://s7.gifyu.com/images/t192af2e314dc612f1.gif")
 ---
 class: inverse, center
 
+Some generative art....
 ```{r out.width = '50%', echo=FALSE, fig.align='center'}
 knitr::include_graphics("https://s7.gifyu.com/images/t2.gif") 
 ```
@@ -325,6 +326,6 @@ It will be slow if you have many (>100) figures.
 class: inverse, center
 
 ```{r out.width = '80%', echo=FALSE, fig.align='center'}
-knitr::include_graphics("https://raw.githubusercontent.com/flee598/tut_stuff/master/gifs/GapMinder.gif")
+knitr::include_graphics("https://raw.githubusercontent.com/flee598/gifs/master/GapMinder.gif")
 ```
 ---
