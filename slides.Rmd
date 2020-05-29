@@ -72,7 +72,7 @@ knitr::include_graphics("https://s7.gifyu.com/images/t2.gif")
 - 3: create 1 figure per time-step 
 - 4: sow together into a gif 
 
-Normally most time is spent on 2, 3, 1, 4 respectively. 
+Normally most time is spent on 2 and 3. 
  
 ---
 # Walk through a gapminder example 
@@ -132,10 +132,17 @@ dat1 %>%
 
 ```
 
-We can make a gif where each time-step new data points are added. 
+---
+class: inverse
+
+We can make a gif where each time-step new data points are added, e.g.
+
+```{r out.width = '80%', echo=FALSE, fig.align='center'}
+knitr::include_graphics("https://raw.githubusercontent.com/flee598/gifs/master/GapMinder.gif")
+```
+
 
 ---
-
 Typically we want to loop over each of the levels of the explanitory variable (year)
 creating a plot for each, which we then sow together. 
 
@@ -258,7 +265,7 @@ dat1 %>%
 .pull-right[
 ```{r plot-label-out3, ref.label="plot-label3", fig.retina = 2, echo=F, waring = F, message = F, fig.height = 7}
 ```
-Trash! only the second timepoint. 
+Better!
 ]
 
 ---

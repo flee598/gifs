@@ -4,7 +4,7 @@
     <title>gifs in R</title>
     <meta charset="utf-8" />
     <meta name="author" content="" />
-    <meta name="date" content="2020-05-28" />
+    <meta name="date" content="2020-05-29" />
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
@@ -14,7 +14,7 @@ class: center, middle, inverse, title-slide
 
 # gifs in R
 ## made from data or programmatically…. no cats
-### 2020-05-28
+### 2020-05-29
 
 ---
 
@@ -69,7 +69,7 @@ Some generative art....
 - 3: create 1 figure per time-step 
 - 4: sow together into a gif 
 
-Normally most time is spent on 2, 3, 1, 4 respectively. 
+Normally most time is spent on 2 and 3. 
  
 ---
 # Walk through a gapminder example 
@@ -174,10 +174,15 @@ dat1 %&gt;%
 
 &lt;img src="slides_files/figure-html/unnamed-chunk-9-1.png" width="504" style="display: block; margin: auto;" /&gt;
 
-We can make a gif where each time-step new data points are added. 
+---
+class: inverse
+
+We can make a gif where each time-step new data points are added, e.g.
+
+&lt;img src="https://raw.githubusercontent.com/flee598/gifs/master/GapMinder.gif" width="80%" style="display: block; margin: auto;" /&gt;
+
 
 ---
-
 Typically we want to loop over each of the levels of the explanitory variable (year)
 creating a plot for each, which we then sow together. 
 
@@ -216,7 +221,7 @@ dat1 %&gt;%
 ## the group aesthetic?
 ```
 
-&lt;img src="slides_files/figure-html/unnamed-chunk-12-1.png" width="504" style="display: block; margin: auto;" /&gt;
+&lt;img src="slides_files/figure-html/unnamed-chunk-13-1.png" width="504" style="display: block; margin: auto;" /&gt;
 
 x-axis limits are no good.
 
@@ -300,7 +305,7 @@ dat1 %&gt;%
 
 .pull-right[
 &lt;img src="slides_files/figure-html/plot-label-out3-1.png" width="504" /&gt;
-Trash! only the second timepoint. 
+Better!
 ]
 
 ---
