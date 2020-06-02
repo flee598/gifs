@@ -376,7 +376,6 @@ knitr::include_graphics("https://raw.githubusercontent.com/flee598/gifs/master/g
 ---
 
 You can change the figure size, speed etc. 
-
 ```{r echo = T, eval = F, message = FALSE, warning=FALSE}
 
 plt1 <- animate(plt1, 
@@ -387,8 +386,7 @@ plt1 <- animate(plt1,
   res = 100)   # resolution
 ```
 
-Save
-
+Save the gif
 ```{r echo = T, eval = F, message = FALSE, warning=FALSE}
 anim_save("my_gif.gif", animation = plt1)
 ```
@@ -396,7 +394,6 @@ anim_save("my_gif.gif", animation = plt1)
 ---
 
 There are lots of other options available e.g. shifting points through time
-
 ```{r echo = T, eval = F, message = FALSE, warning=FALSE}
 ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
   geom_point(alpha = 0.7, show.legend = FALSE) +
@@ -436,8 +433,4 @@ DIY magick if you want to do non-ggplot.
 
 Also the plotly package for interactive plots, can include a "play" button, 
 good if you want to host your gif on a website.
-
----
-
-
 

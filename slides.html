@@ -431,7 +431,6 @@ class: inverse, center
 
 You can change the figure size, speed etc. 
 
-
 ```r
 plt1 &lt;- animate(plt1, 
   fps = 20,     # animation speed 
@@ -441,8 +440,7 @@ plt1 &lt;- animate(plt1,
   res = 100)   # resolution
 ```
 
-Save
-
+Save the gif
 
 ```r
 anim_save("my_gif.gif", animation = plt1)
@@ -451,7 +449,6 @@ anim_save("my_gif.gif", animation = plt1)
 ---
 
 There are lots of other options available e.g. shifting points through time
-
 
 ```r
 ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
@@ -477,7 +474,6 @@ class: inverse, center
 class: inverse, center
 
 and some more questionable options.... 
-
 &lt;img src="https://raw.githubusercontent.com/flee598/gifs/master/gganimate_3.gif" width="80%" style="display: block; margin: auto;" /&gt;
 ----
 
@@ -489,8 +485,6 @@ DIY magick if you want to do non-ggplot.
 
 Also the plotly package for interactive plots, can include a "play" button, 
 good if you want to host your gif on a website.
-
----
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
