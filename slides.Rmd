@@ -370,8 +370,9 @@ plt1 <- ggplot(dat1, aes(year, Mnlife, colour = continent)) +
 
 class: inverse, center
 
-Add annimate_1 gif here
-
+```{r out.width = '80%', echo=FALSE, fig.align='center'}
+knitr::include_graphics("https://raw.githubusercontent.com/flee598/gifs/master/gganimate_1.gif")
+```
 ---
 
 You can change the figure size, speed etc. 
@@ -415,15 +416,16 @@ ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
 ---
 class: inverse, center
 
-add gganimate_2 gif here
-
+```{r out.width = '80%', echo=FALSE, fig.align='center'}
+knitr::include_graphics("https://raw.githubusercontent.com/flee598/gifs/master/gganimate_2.gif")
+```
 ---
 class: inverse, center
 
 and some more questionable options.... 
-
-add bouncing gif here 
-
+```{r out.width = '80%', echo=FALSE, fig.align='center'}
+knitr::include_graphics("https://raw.githubusercontent.com/flee598/gifs/master/gganimate_3.gif")
+```
 ----
 
 # Summary 

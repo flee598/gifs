@@ -24,13 +24,14 @@ class: center, middle, inverse, title-slide
 - These slides: https://flee598.github.io/gifs/slides.html#1
 - GitHub repository containing code to make this Rmarkdown presentation:
   https://github.com/flee598/gifs
-- detailed gganimate slide deck by [Katherine Goode](https://goodekat.github.io/presentations/2019-isugg-gganimate-spooky/slides.html#1)  
 
 - packages used:
   - gapminder - some data
   - tidyverse - data manipulation and plotting 
   - [magick](https://ropensci.org/tutorials/magick_tutorial/) - sowing figures into gifs
   - [gganimate](https://gganimate.com/index.html) - ggplot style gifs
+
+- detailed gganimate slide deck by [Katherine Goode](https://goodekat.github.io/presentations/2019-isugg-gganimate-spooky/slides.html#1)  
 
 I am using Windows 10 with R v3.6-2.  
 
@@ -75,7 +76,6 @@ Some generative art....
 - Using gganimate 
 
   - gganimate is made by the makers of ggplot  - it ties in really nicely with the tidyverse.
-  
 
 I'll go through an example of both using the gapminder dataset.
 
@@ -426,8 +426,7 @@ plt1 &lt;- ggplot(dat1, aes(year, Mnlife, colour = continent)) +
 
 class: inverse, center
 
-Add annimate_1 gif here
-
+&lt;img src="https://raw.githubusercontent.com/flee598/gifs/master/gganimate_1.gif" width="80%" style="display: block; margin: auto;" /&gt;
 ---
 
 You can change the figure size, speed etc. 
@@ -471,16 +470,17 @@ ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
 ```
 
 ---
+class: inverse, center
 
-add gganimate_2 gif here
-
+&lt;img src="https://raw.githubusercontent.com/flee598/gifs/master/gganimate_2.gif" width="80%" style="display: block; margin: auto;" /&gt;
 ---
+class: inverse, center
 
 and some more questionable options.... 
 
-add bouncing gif here 
-
+&lt;img src="https://raw.githubusercontent.com/flee598/gifs/master/gganimate_3.gif" width="80%" style="display: block; margin: auto;" /&gt;
 ----
+
 # Summary 
 
 gganimate if your figures are being made in ggplot.
