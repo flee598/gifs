@@ -423,7 +423,8 @@ and some more questionable options....
 ```{r out.width = '80%', echo=FALSE, fig.align='center'}
 knitr::include_graphics("https://raw.githubusercontent.com/flee598/gifs/master/gganimate_3.gif")
 ```
-----
+
+---
 
 # Summary 
 
