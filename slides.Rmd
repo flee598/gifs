@@ -21,9 +21,12 @@ output:
   https://github.com/flee598/gifs
 
 - packages used:
-  - tidyverse - data manipulation and plotting 
-  - magick    - sowing figures into gifs 
   - gapminder - some data
+  - tidyverse - data manipulation and plotting 
+  - [magick](https://ropensci.org/tutorials/magick_tutorial/) - sowing figures into gifs
+  - [gganimate](https://gganimate.com/index.html) - ggplot style gifs
+
+- detailed gganimate slide deck by [Katherine Goode](https://goodekat.github.io/presentations/2019-isugg-gganimate-spooky/slides.html#1)  
 
 I am using Windows 10 with R v3.6-2.  
 
@@ -67,27 +70,30 @@ knitr::include_graphics("https://s7.gifyu.com/images/t2.gif")
 ```
 
 ---
-# The process
+# Two different options 
 
-- 1: get data
-- 2: fill in missing data gaps so there is a continuous record 
-- 3: create 1 figure per time-step 
-- 4: sow together into a gif 
+- Using magick
 
-Normally most time is spent on 2 and 3. 
- 
----
-# Walk through a gapminder example 
+  - The magick package sows still .pngs into a gif - can make gifs of anything.
+
+- Using gganimate 
+
+  - gganimate is made by the makers of ggplot  - it ties in really nicely with the tidyverse.
+
+I'll go through an example of both using the gapminder dataset.
+
+[Gapminder](https://www.gapminder.org) is a global database of temporal
+socio-economic data, conveniently there is an R package for it.   
 
 Temporal data is ideal for gifs.
 
-[Gapminder](https://www.gapminder.org) is a global database of temporal
-socio-economic data, conveniently there is an R package for it. 
+---
 
+# Magick example
 
 Install required packages
 ```{r echo = TRUE, eval = FALSE}
-install.packages(c("gapminder", "tidyverse", "magick"))
+install.packages(c("gapminder", "tidyverse", "magick" "gganimate"))
 ```
 
 Load packages
@@ -95,6 +101,7 @@ Load packages
 library(gapminder)
 library(tidyverse)
 library(magick)
+library(gganimate)
 ```
 
 Now have access to the gapminder data.
@@ -137,7 +144,7 @@ dat1 %>%
 ---
 class: inverse
 
-We can make a gif where each time-step new data points are added, e.g.
+Make a gif where each time-step new data points are added, e.g.
 
 ```{r out.width = '80%', echo=FALSE, fig.align='center'}
 knitr::include_graphics("https://raw.githubusercontent.com/flee598/gifs/master/GapMinder.gif")
@@ -145,8 +152,8 @@ knitr::include_graphics("https://raw.githubusercontent.com/flee598/gifs/master/G
 
 
 ---
-Typically we want to loop over each of the levels of the explanitory variable (year)
-creating a plot for each, which we then sow together. 
+Typically you want to loop over each of the levels of the explanitory variable (year)
+creating a plot for each, which you then sow together. 
 
 First get the years that data exist for. 
 
@@ -165,7 +172,7 @@ dat1 %>%
   geom_line(size = 1) +
   geom_point(size = 3) +
   theme_bw() +
-  ylab(" Mean life expectancy") +
+  ylab("Mean life expectancy") +
   theme(text = element_text(size = 16))
 
 ```
@@ -271,8 +278,8 @@ Better!
 ]
 
 ---
-We want to step through all `yrs`, creating a plot each time-step, too lazy to do it 
-manually, we can use a for loop or lapply. 
+Step through all `yrs`, creating a plot each time-step, too lazy to do it 
+manually, you can use a for loop or lapply. 
 
 First need a folder to save the plots:
 ```{r echo = T, eval = F, message = FALSE, warning=FALSE}
@@ -338,4 +345,97 @@ class: inverse, center
 ```{r out.width = '80%', echo=FALSE, fig.align='center'}
 knitr::include_graphics("https://raw.githubusercontent.com/flee598/gifs/master/GapMinder.gif")
 ```
+
+---
+
+# gganimate example
+
+gganimate creates gifs using ggplot syntax, lots of built-in functionality. 
+
+Much simplier than magick but restricted to ggplot format.  
+
+```{r echo = T, eval = F, message = FALSE, warning=FALSE}
+plt1 <- ggplot(dat1, aes(year, Mnlife, colour = continent)) +
+  scale_colour_brewer(palette = "Set2") +
+  geom_line(size = 1) +
+  geom_point(aes(group = seq_along(year)), size = 3) + # keep points
+  theme_bw() +
+  theme(text = element_text(size = 16)) +
+  labs(x = 'Year', y = 'Mean life expectancy (years)') +
+  theme(legend.position = "bottom") +
+  # gganimate bit
+  transition_reveal(year)
+```
+---
+
+class: inverse, center
+
+Add annimate_1 gif here
+
+---
+
+You can change the figure size, speed etc. 
+
+```{r echo = T, eval = F, message = FALSE, warning=FALSE}
+
+plt1 <- animate(plt1, 
+  fps = 20,     # animation speed 
+  height = 10, 
+  width = 18, 
+  units = "cm", 
+  res = 100)   # resolution
+```
+
+Save
+
+```{r echo = T, eval = F, message = FALSE, warning=FALSE}
+anim_save("my_gif.gif", animation = plt1)
+```
+
+---
+
+There are lots of other options available e.g. shifting points through time
+
+```{r echo = T, eval = F, message = FALSE, warning=FALSE}
+ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
+  geom_point(alpha = 0.7, show.legend = FALSE) +
+  scale_colour_manual(values = country_colors) +
+  scale_size(range = c(2, 12)) +
+  scale_x_log10() +
+  facet_wrap(~continent) +
+  # gganimate bits
+  labs(
+  title = 'Year: {frame_time}', # add year counter 
+  x = 'GDP per capita', 
+  y = 'life expectancy') +
+  transition_time(year) +       # transition based on year
+  ease_aes('linear')            # control how points move
+```
+
+---
+class: inverse, center
+
+add gganimate_2 gif here
+
+---
+class: inverse, center
+
+and some more questionable options.... 
+
+add bouncing gif here 
+
+----
+
+# Summary 
+
+gganimate if your figures are being made in ggplot.
+
+DIY magick if you want to do non-ggplot.
+
+Also the plotly package for interactive plots, can include a "play" button, 
+good if you want to host your gif on a website.
+
+---
+
+
 
